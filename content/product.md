@@ -1,7 +1,7 @@
 ---
 title: 'Nostrdam Booth 24'
 layout: default
-description: 'Build your Bitcoin blog/webshop for free with donation and checkout tools.'
+description: 'Nostr Booth Amsterdam 2024 BTC AMS'
 
 image:
   src: 'https://dev.cypher.space/project/Placeholder.jpg'
