@@ -1,5 +1,5 @@
 ---
-title: 'Cypher - Build Bitcoin Only Businesses'
+title: 'Nostrdam Booth 24'
 layout: default
 description: 'Build your Bitcoin blog/webshop for free with donation and checkout tools.'
 

@@ -191,8 +191,8 @@ const currentDate = new Date();
           <p
             class="text-xs leading-5 text-black dark:text-black dark:text-white mt-1"
           >
-            &copy; {{ currentDate.getFullYear() }} {{ data.name }}, Inc. All
-            rights reserved.
+            {{ currentDate.getFullYear() }} {{ data.name }} All
+            rights free.
           </p>
         </div>
       </div>

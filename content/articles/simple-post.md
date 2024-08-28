@@ -1,5 +1,5 @@
 ---
-title: "Cypher - Build Bitcoin Only Businesses"
+title: "Nostrdam Booth 24"
 layout: default
 description: "This is a simple front matter markdown post example without to much SEO compromise."
 featured: true

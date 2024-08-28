@@ -1,5 +1,5 @@
 ---
-title: "Cypher - Build Bitcoin Only Businesses"
+title: "Nostrdam Booth 24"
 layout: default
 description: "This is a more robust front matter blog post example setup"
 featured: true
