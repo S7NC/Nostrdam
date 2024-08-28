@@ -4,7 +4,7 @@ layout: default
 description: 'Build your Bitcoin blog/webshop for free with donation and checkout tools.'
 
 image:
-  src: 'https://dev.cypher.space/project/Placeholder.gif'
+  src: 'https://dev.cypher.space/project/Placeholder.jpg'
   alt: 'An image showcasing My Page.'
   width: 1200
   height: 630

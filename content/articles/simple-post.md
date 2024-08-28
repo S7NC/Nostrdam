@@ -41,7 +41,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 ## Images
 
-![Alt text for the image](https://dev.cypher.space/project/Placeholder.gif)
+![Alt text for the image](https://dev.cypher.space/project/Placeholder.jpg)
 
 ## List
 
