@@ -3,7 +3,7 @@
   "initsetup": true,
   "maintenancemode": false,
   "nostradmin":"npub1h5ewqujs336m0kdez46l03jttnaqp3yrvf7evertw0ec52q3qulq4kcdg7",
-  "relays":["wss://relay.damus.io"],
+  "relays":["wss://relay.damus.io, wss://relay.nostr.band"],
   "name":"Nostrdam 24",
   "tagline":"Bitcoin Amsterdam Booth",
   "textlogo":"Nostrdam",

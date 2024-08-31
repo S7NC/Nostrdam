@@ -4,14 +4,16 @@
       <div class="flex justify-center mb-4">
         <img :src="eventData.picture || ''" alt="Profile Picture" class="w-32 h-32 rounded-full border-4 border-white" />
       </div>
+
+      <!--
       <div class="text-center">
         <h2 class="text-4xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-8xl uppercase">{{ eventData.name || 'No Name' }}</h2>
-        <!-- <p class="text-gray-200">{{ eventData.display_name || eventData.nip05 || 'No Display Name' }}</p> -->
+         <p class="text-gray-200">{{ eventData.display_name || eventData.nip05 || 'No Display Name' }}</p> 
       </div>
       <div class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl my-4">
         <p>{{ eventData.about || 'No About Information' }}</p>
       </div>
-
+  -->
 
 
 
