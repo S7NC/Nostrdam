@@ -5,7 +5,7 @@
         
       >
       <LightningCircleIcon
-            class="h-8 w-8"
+            class="h-12 w-12 fill-orange-400 bg-white rounded-3xl"
             aria-hidden="true"
             @click="open = true"
           />
