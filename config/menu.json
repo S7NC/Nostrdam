@@ -1,13 +1,8 @@
 {
     "Headernavigation":{
         "basicmenu":[
-         {
-            "name":"Home",
-            "href":"/"
-         }
+
         ],
-        "bloglabel": "Notes",
-        "shoplabel":"Shop",
         "MenuPopupName":"",
         "MenuPopup":[
            {
