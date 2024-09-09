@@ -1,12 +1,10 @@
 <template>
 
     <div class="container mx-auto p-4 max-w-7xl mt-12">
-      <!-- <p class="text-center">
-        <RelayIcon class="w-16 h-16 dark:text-gray-200 inline" />
-      </p>
+
       <h1 class="text-2xl text-center dark:text-white mb-6">
-        Straight of the Relay
-      </h1> -->
+        Our latest notes
+      </h1>
 
       <div v-if="isLoading" class="text-center my-10">
         <svg

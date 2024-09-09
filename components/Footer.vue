@@ -72,13 +72,10 @@ const currentDate = new Date();
 
           <div class="flex flex-row justify-center my-3">
             <SettingsTheme />
-            <SettingsLanguage v-if="data.multilang" />
           </div>
         </div>
 
       </div>
-
-      <FundsTicker />
 
       <div
         class="mx-auto max-w-7xl px-6 py-2 md:flex md:items-center md:justify-between lg:px-8"

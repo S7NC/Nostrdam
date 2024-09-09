@@ -28,7 +28,6 @@ import data from "~/config/setup";
 
 import menu from "~/config/menu";
 
-const links = data.socialnavigation;
 import { useProjectStore } from "~/store/shopcart";
 
 const store = useProjectStore();
@@ -96,7 +95,7 @@ onMounted(async () => {
     fetchedEvent.value = 'No event content found';
   }
 
-  console.log(fetchedEvent.value)
+  //console.log(fetchedEvent.value)
 
 });
 
@@ -117,67 +116,20 @@ const eventData = ref(null);
         <NuxtLink :to="localePath('/')" class="flex">
           <span class="sr-only">{{ data.name }}</span>
 
-          <!-- <img
-            v-if="data.logo"
-            :class="[data.logodark ? 'block dark:hidden h-12' : '', '']"
-            :src="'/project/' + data.logoimage"
-            :alt="data.name"
-          />
-          <img
-            v-if="data.logodark"
-            class="hidden dark:block h-12"
-            :src="'/project/' + data.logodarkimage"
-            :alt="data.name"
-          /> -->
-
           <span
             v-if="eventData"
             class="m-2 ml-4 text-2xl font-black dark:text-white uppercase"
             >{{ eventData.name }}</span
           >
         </NuxtLink>
-      </div>
 
+      </div>
       <div class="flex lg:hidden">
-        <SettingsCurrency />
-
-        <NuxtLink
-          v-if="data.shop"
-          class="text-sm font-semibold leading-6 text-black dark:text-white mx-4 mt-1"
-          :to="localePath('/cart')"
-        >
-          <ShoppingCartIcon
-            class="h-7 w-7 text-black dark:text-white inline"
-            aria-hidden="true"
-          />
-          <p
-            class="inline ml-1 font-semibold text-blue-800 bg-blue-200 dark:bg-blue-200 dark:text-blue-800 rounded-2xl w-4 h-4 -pt-1.5 mr-4"
-          >
-            <span
-              id="numbered"
-              class="text-center font-semibold text-xs align-text-center px-1"
-            >
-              {{ totalItems }}</span
-            >
-          </p>
+        <NuxtLink class="flex m-2 text-black dark:text-white">
+          RSVP
         </NuxtLink>
-
-        <div
-          class="flex lg:hidden border-2 rounded-md border-black dark:border-white p-1"
-        >
-          <button
-            type="button"
-            class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-white text-black dark:text-white"
-            @click="mobileMenuOpen = true"
-          >
-            <span class="sr-only">Open main menu</span>
-            <Bars3Icon
-              class="h-6 w-6 text-black dark:text-white"
-              aria-hidden="true"
-            />
-          </button>
-        </div>
       </div>
+
       <PopoverGroup class="hidden lg:flex lg:gap-x-12">
         <NuxtLink
           :to="localePath(item.href)"
@@ -195,14 +147,6 @@ const eventData = ref(null);
         >
           {{ menu.Headernavigation.bloglabel }}</NuxtLink
         >
-
-        <NuxtLink
-          v-if="data.shop"
-          class="text-sm font-semibold leading-6 text-black dark:text-white"
-          :to="localePath('/shop')"
-        >
-          {{ menu.Headernavigation.shoplabel }}
-        </NuxtLink>
 
         <NuxtLink
           v-if="data.contact"
@@ -274,27 +218,7 @@ const eventData = ref(null);
         </Popover>
       </PopoverGroup>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-        <NuxtLink
-          v-if="data.shop"
-          class="text-sm font-semibold leading-6 text-black dark:text-white"
-          :to="localePath('/cart')"
-        >
-          <ShoppingCartIcon
-            class="h-7 w-7 text-black dark:text-white inline"
-            aria-hidden="true"
-          />
-          <p
-            class="inline ml-1 font-semibold text-blue-800 bg-blue-200 dark:bg-blue-200 dark:text-blue-800 rounded-2xl w-4 h-4 -pt-1.5 mr-4"
-          >
-            <span
-              id="numbered"
-              class="text-center font-semibold text-xs align-text-center px-1"
-            >
-              {{ totalItems }}</span
-            >
-          </p>
-        </NuxtLink>
-
+        <span class="text-colorBgLight text-xl">Follow us:</span>
         <a
           :href="'nostr:' +data.nostradmin"
           target="_blank"
@@ -341,119 +265,7 @@ const eventData = ref(null);
           </svg>
         </a>
 
-        <SettingsLanguage v-if="data.multilang" />
-
-        <SettingsCurrency />
       </div>
     </nav>
-    <Dialog
-      as="div"
-      class="lg:hidden"
-      @close="mobileMenuOpen = false"
-      :open="mobileMenuOpen"
-    >
-      <div class="fixed inset-0 z-10" />
-
-      <DialogPanel
-        class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-colorBgLight dark:bg-colorBgDark p-3 lg:px-8 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
-      >
-        <div class="flex items-center justify-between">
-          <NuxtLink to="/" class="-m-1.5 p-1.5">
-          <span
-            v-if="eventData"
-            class="m-2 ml-4 text-2xl font-black dark:text-white uppercase"
-            >{{ eventData.name }}</span
-          >
-        </NuxtLink>
-
-<!-- 
-
-
-            <img
-              class="h-12 w-auto hidden dark:block"
-              :src="'/project/' + data.logodarkimage"
-              alt=""
-            />
-
-            <img
-              class="h-12 w-auto dark:hidden block"
-              :src="'/project/' + data.logoimage"
-              alt=""
-            />
-          -->
-          <button
-            type="button"
-            class="-m-2.5 rounded-md p-2.5 text-gray-700 text-white dark:text-black"
-            @click="mobileMenuOpen = false"
-          >
-            <span class="sr-only">Close menu</span>
-            <XMarkIcon class="h-6 w-6" aria-hidden="true" />
-          </button>
-        </div>
-        <div class="mt-6 flow-root px-3">
-          <div class="-my-6 divide-y divide-white dark:divide-black">
-            <div class="space-y-2 py-6">
-              <NuxtLink
-                :to="localePath(item.href)"
-                v-for="item in menu.Headernavigation.basicmenu"
-                :key="item.name"
-                @click="mobileMenuOpen = false"
-                class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-black dark:text-white"
-              >
-                {{ item.name }}</NuxtLink
-              >
-              <div v-if="menu.Headernavigation.MenuPopupName">
-                <NuxtLink
-                  :to="localePath(item.href)"
-                  v-for="item in menu.Headernavigation.MenuPopup"
-                  @click="mobileMenuOpen = false"
-                  :key="item.name"
-                  class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-black dark:text-white"
-                >
-                  {{ item.name }}</NuxtLink
-                >
-              </div>
-
-              <NuxtLink
-                v-if="data.blog"
-                class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-black dark:text-white"
-                :to="localePath('/notes')"
-                @click="mobileMenuOpen = false"
-              >
-                {{ menu.Headernavigation.bloglabel }}
-              </NuxtLink>
-
-              <NuxtLink
-                v-if="data.shop"
-                class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-black dark:text-white"
-                :to="localePath('/shop')"
-                @click="mobileMenuOpen = false"
-              >
-                {{ menu.Headernavigation.shoplabel }}
-              </NuxtLink>
-
-              <NuxtLink
-                v-if="data.contact"
-                class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-black dark:text-white"
-                :to="localePath('/contact')"
-                @click="mobileMenuOpen = false"
-              >
-                Contact
-              </NuxtLink>
-            </div>
-
-            <div class="py-6">
-              <SettingsSocials class="mx-auto pt-3" />
-
-              <div class="flex flex-row justify-center my-3 mt-6">
-                <SettingsTheme />
-
-                <SettingsLanguage v-if="data.multilang" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </DialogPanel>
-    </Dialog>
   </header>
 </template>
