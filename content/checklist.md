@@ -23,6 +23,9 @@ head:
 
 
 
+:NostrCalendarEvent
+
+
 ::ContainerProse
 # Checklist
 
@@ -33,6 +36,9 @@ head:
 - [ ] Order webhook (Discord)
 - [ ] Alby Read only token
 - [ ] Emailadress
+
+
+
 
 
 ::
