@@ -22,4 +22,6 @@ head:
 ---
 :NostrProfile
 
+:NostrCalendarEvent
+
 :NostrFeed
