@@ -1,13 +1,13 @@
 <script setup>
 
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import setup from "~/config/setup";
-import NDK from "@nostr-dev-kit/ndk";
+import NDK, { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
 import {bech32} from "bech32";
 
 const fetchedCalendarEvent = ref('');
 const metadata = ref({});
-const ndk = new NDK({explicitRelayUrls: ['wss://relay.nostr.band']});
+const ndk = new NDK({explicitRelayUrls: setup.relays});
 const RSVPs = ref();
 const bytesToHex = (bytes) => {
   return Array.from(bytes)
@@ -35,15 +35,14 @@ onMounted(async () => {
   const filter = {
     kinds: [31923],
     authors: [npubToHex(setup.nostradmin)]
-    //authors: [npubToHex('npub13e6qu4kdjsyysrfl5an558rawvqg0rx2xuat9ca706spcdqjzhuqq6md43')]
   };
   fetchedCalendarEvent.value = await ndk.fetchEvent(filter);
-  //fetchedCalendarEvent.value = fetchedCalendarEvent.value.rawEvent();
   if (fetchedCalendarEvent.value) {
-    console.log(fetchedCalendarEvent.value)
     setMetaData();
     await getRSVPs();
   }
+  // TODO: check if user is connected and is already attending to the calender event.
+  metadata.value = {...metadata.value, 'isAttending': false};
 });
 
 const setMetaData = () => {
@@ -76,28 +75,72 @@ const setMetaData = () => {
 }
 
 // https://github.com/nostr-protocol/nips/blob/master/52.md#calendar-event-rsvp
-const RSVP = (calendarEvent) => {
-  console.log('Connect your Nostr and sign an RSVP event.')
+const RSVPtoEvent = async (calendarEvent, status, event) => {
+  try {
+    // Find svg loading element in the button and remove hidden class.
+    if (event.target.querySelector('svg').classList.contains('hidden')) {
+      event.target.querySelector('svg').classList.remove('hidden');
+    }
+    const nip07signer = new NDKNip07Signer();
+    ndk.signer = nip07signer;
+    await ndk.connect();
+    const connectedUser = await nip07signer.user();
+    // Check is user is already attending to the event.
+    if(RSVPs.value.pubkeys.includes(connectedUser.pubkey)){
+      metadata.value.isAttending = true;
+      return;
+    }
+    const RSVPevent = new NDKEvent(ndk);
+    RSVPevent.kind = 31925;
+    RSVPevent.tags = [
+      ['e', calendarEvent.id, 'wss://relay.damus.io'],
+      ['a', calendarEvent.kind+':'+calendarEvent.pubkey+':'+metadata.value.d],
+      // Notice: the required d-tag is added when the event is signed.
+      ['status', status],
+      ['p', calendarEvent.pubkey, 'wss://relay.damus.io'],
+      ['L', 'status'],
+      ['l', status, 'status'],
+      ['client', 'nostrdam.com', 'wss://relay.damus.io']
+    ];
+    RSVPevent.validate();
+    await RSVPevent.sign(nip07signer);
+    const res = await RSVPevent.publish();
+    console.log(res);
+    metadata.value.isAttending = true;
+  } catch (e) {
+    if (!event.target.querySelector('svg').classList.contains('hidden')) {
+      event.target.querySelector('svg').classList.add('hidden');
+    }
+    alert(e);
+    console.log(e);
+  }
 }
 
-const toDate = (timestamp) => {
-  let string = new Date(timestamp * 1000).toLocaleString("en-US");
-  return string;
+const toDateString = (timestamp) => {
+  let stringDate = new Date(timestamp * 1000).toLocaleString("en-US");
+  return stringDate;
 }
 
-// Get RSVP events to the calendarEvent
+// Get RSVP events to the calendarEvent.
 // https://github.com/nostr-protocol/nips/blob/master/52.md#calendar-event-rsvp
 const getRSVPs = async (calendarEvent) => {
   await ndk.connect();
   const filter = {
     kinds: [31925],
     ['#a']: ['31923:'+fetchedCalendarEvent.value.rawEvent().pubkey+':'+metadata.value.d],
-    limit: 750
+    ['#l']: ['accepted', 'status'],
+    // Notice: labels are still common to use for RSVP event to set the status instead of the status tag as described in the NIP.
+    //['#status]: ['accepted'],
   };
-  // TODO filter out duplicate pubkeys..
-  // TODO filter out status accepted
   const rsvp = await ndk.fetchEvents(filter);
-  RSVPs.value = {'numberOfAttendees': rsvp.size};
+  // Filter out duplicate pubkeys.
+  RSVPs.value = {...RSVPs.value, pubkeys: []};
+  for(const event of rsvp) {
+    const pubkey = event.pubkey;
+    RSVPs.value = {...RSVPs.value, pubkeys: [...RSVPs.value.pubkeys, pubkey]};
+  }
+  RSVPs.value.pubkeys = RSVPs.value.pubkeys.filter((item, index, array) => array.indexOf(item) === index);
+  RSVPs.value = {...RSVPs.value, 'numberOfAttendees': RSVPs.value.pubkeys.length};
 }
 
 </script>
@@ -111,13 +154,27 @@ const getRSVPs = async (calendarEvent) => {
           {{ metadata.description }}
         </p>
         <p>
-          {{ toDate(metadata.start) }} - {{ toDate(metadata.end) }} ({{ metadata.start_tzid }})
+          {{ toDateString(metadata.start) }} - {{ toDateString(metadata.end) }} ({{ metadata.start_tzid }})
           <br />
           Bar Braai, {{ metadata.location }}
           <br />
           <a href="https://btcmap.org/merchant/node:2808992711" target="_blank" class="text-sm underline">View on btcmap.org</a>
         </p>
-        <button @click="RSVP(fetchedCalendarEvent)" class="btn-block bg-orange-500 hover:bg-orange-700 mt-4 my-2 p-2">Click here to RSVP</button>
+        <div class="mt-4 my-2" v-if="metadata.isAttending">
+          <span class="text-green-400">You're attending this event</span>
+          <br />
+          <a href="#" class="text-sm underline" @click="RSVPtoEvent(fetchedCalendarEvent, 'declined', $event)">Click here to unattend</a>
+        </div>
+        <div class="mt-4 my-2" v-else>
+          <button @click="RSVPtoEvent(fetchedCalendarEvent, 'accepted', $event)" class="inline-flex items-center rounded-md btn-block bg-orange-500 hover:bg-orange-700 p-2">
+            <svg class="animate-spin hidden mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Click here to RSVP
+          </button>
+        </div>
+
         <p class="text-sm italic" v-if="RSVPs">
           <span>{{ RSVPs.numberOfAttendees }}</span> other nostriches are going
         </p>
