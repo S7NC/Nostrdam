@@ -174,7 +174,9 @@ const getRSVPs = async (calendarEvent) => {
             Click here to RSVP
           </button>
         </div>
-
+        <div class="my-12">
+          <a href="https://bitkassa.nl/nostrdam" target="_blank">Please be aware you have to <span class="underline">buy a ticket</span> </a>
+</div>
         <p class="text-sm italic" v-if="RSVPs">
           <span>{{ RSVPs.numberOfAttendees }}</span> other nostriches are going
         </p>
