@@ -52,10 +52,11 @@ const setMetaData = () => {
     if (tag[0] === 'title') {
      metadata.value = {...metadata.value, 'title': tag[1]};
     }
-    // Dates of the event (start and end)
+    // Startdate
     if (tag[0] === 'start') {
       metadata.value = {...metadata.value, 'start': tag[1]};
     }
+    // Enddate
     if (tag[0] === 'end') {
       metadata.value = {...metadata.value, 'end': tag[1]};
     }
@@ -67,9 +68,17 @@ const setMetaData = () => {
     if (tag[0] === 'd') {
       metadata.value = {...metadata.value, 'd': tag[1]};
     }
-    // timezone
+    // Timezone
     if (tag[0] === 'start_tzid') {
       metadata.value = {...metadata.value, 'start_tzid': tag[1]};
+    }
+    // Summary
+    if (tag[0] === 'summary') {
+      metadata.value = {...metadata.value, 'summary': tag[1]};
+    }
+    // Geohash
+    if (tag[0] === 'g') {
+      metadata.value = {...metadata.value, 'g': tag[1]};
     }
   });
 }
@@ -105,7 +114,6 @@ const RSVPtoEvent = async (calendarEvent, status, event) => {
     RSVPevent.validate();
     await RSVPevent.sign(nip07signer);
     const res = await RSVPevent.publish();
-    console.log(res);
     metadata.value.isAttending = true;
   } catch (e) {
     if (!event.target.querySelector('svg').classList.contains('hidden')) {
@@ -151,7 +159,7 @@ const getRSVPs = async (calendarEvent) => {
       <div class="text-center my-12">
         <h2 class="text-white text-6xl mb-4">{{ metadata.title }}</h2>
         <p>
-          {{ metadata.description }}
+          {{ metadata.summary }}
         </p>
         <p>
           {{ toDateString(metadata.start) }} - {{ toDateString(metadata.end) }} ({{ metadata.start_tzid }})
