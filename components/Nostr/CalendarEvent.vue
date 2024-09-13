@@ -38,14 +38,14 @@ onMounted(async () => {
   };
   fetchedCalendarEvent.value = await ndk.fetchEvent(filter);
   if (fetchedCalendarEvent.value) {
-    setMetaData();
+    await setMetaData();
     await getRSVPs();
   }
   // TODO: check if user is connected and is already attending to the calender event.
   metadata.value = {...metadata.value, 'isAttending': false};
 });
 
-const setMetaData = () => {
+const setMetaData = async () => {
   const tags = fetchedCalendarEvent.value.tags;
   tags.forEach( (tag) => {
     // Title of the event
@@ -81,13 +81,16 @@ const setMetaData = () => {
       metadata.value = {...metadata.value, 'g': tag[1]};
     }
   });
+  if (metadata.value.summary === undefined && fetchedCalendarEvent.value.content) {
+    metadata.value.summary = fetchedCalendarEvent.value.content;
+  }
 }
 
 // https://github.com/nostr-protocol/nips/blob/master/52.md#calendar-event-rsvp
 const RSVPtoEvent = async (calendarEvent, status, event) => {
   try {
     // Find svg loading element in the button and remove hidden class.
-    if (event.target.querySelector('svg').classList.contains('hidden')) {
+    if (event.target.querySelector('svg') && event.target.querySelector('svg').classList.contains('hidden')) {
       event.target.querySelector('svg').classList.remove('hidden');
     }
     const nip07signer = new NDKNip07Signer();
@@ -95,9 +98,13 @@ const RSVPtoEvent = async (calendarEvent, status, event) => {
     await ndk.connect();
     const connectedUser = await nip07signer.user();
     // Check is user is already attending to the event.
-    if(RSVPs.value.pubkeys.includes(connectedUser.pubkey)){
+    if(RSVPs.value && status === 'accepted' && RSVPs.value.pubkeys.includes(connectedUser.pubkey)){
       metadata.value.isAttending = true;
       return;
+    }
+    if(RSVPs.value && status === 'declined' && RSVPs.value.pubkeys.includes(connectedUser.pubkey)){
+      let x  = RSVPs.value.pubkeys.indexOf(connectedUser.pubkey);
+      RSVPs.value.pubkeys.splice(x, 1);
     }
     const RSVPevent = new NDKEvent(ndk);
     RSVPevent.kind = 31925;
@@ -113,13 +120,15 @@ const RSVPtoEvent = async (calendarEvent, status, event) => {
     ];
     RSVPevent.validate();
     await RSVPevent.sign(nip07signer);
-    const res = await RSVPevent.publish();
-    metadata.value.isAttending = true;
+    await RSVPevent.publish();
+    metadata.value.isAttending = (status === 'accepted') || false;
+    if (RSVPs.value) {
+      (metadata.value.isAttending) ? RSVPs.value.numberOfAttendees++ : RSVPs.value.numberOfAttendees--;
+    }
   } catch (e) {
-    if (!event.target.querySelector('svg').classList.contains('hidden')) {
+    if (event.target.querySelector('svg') && !event.target.querySelector('svg').classList.contains('hidden')) {
       event.target.querySelector('svg').classList.add('hidden');
     }
-    alert(e);
     console.log(e);
   }
 }
@@ -129,26 +138,30 @@ const toDateString = (timestamp) => {
   return stringDate;
 }
 
-// Get RSVP events to the calendarEvent.
+// Get RSVP events of the calendarEvent.
 // https://github.com/nostr-protocol/nips/blob/master/52.md#calendar-event-rsvp
-const getRSVPs = async (calendarEvent) => {
-  await ndk.connect();
-  const filter = {
-    kinds: [31925],
-    ['#a']: ['31923:'+fetchedCalendarEvent.value.rawEvent().pubkey+':'+metadata.value.d],
-    ['#l']: ['accepted', 'status'],
-    // Notice: labels are still common to use for RSVP event to set the status instead of the status tag as described in the NIP.
-    //['#status]: ['accepted'],
-  };
-  const rsvp = await ndk.fetchEvents(filter);
-  // Filter out duplicate pubkeys.
-  RSVPs.value = {...RSVPs.value, pubkeys: []};
-  for(const event of rsvp) {
-    const pubkey = event.pubkey;
-    RSVPs.value = {...RSVPs.value, pubkeys: [...RSVPs.value.pubkeys, pubkey]};
+const getRSVPs = async () => {
+  try {
+    await ndk.connect();
+    const filter = {
+      kinds: [31925],
+      ['#a']: ['31923:'+fetchedCalendarEvent.value.rawEvent().pubkey+':'+metadata.value.d],
+      ['#l']: ['accepted', 'status'],
+      // Notice: labels are still common to use for RSVP event to set the status instead of the status tag as described in the NIP.
+      //['#status]: ['accepted'],
+    };
+    const rsvp = await ndk.fetchEvents(filter);
+    // Filter out duplicate pubkeys.
+    RSVPs.value = {...RSVPs.value, pubkeys: []};
+    for(const event of rsvp) {
+      const pubkey = event.pubkey;
+      RSVPs.value = {...RSVPs.value, pubkeys: [...RSVPs.value.pubkeys, pubkey]};
+    }
+    RSVPs.value.pubkeys = RSVPs.value.pubkeys.filter((item, index, array) => array.indexOf(item) === index);
+    RSVPs.value = {...RSVPs.value, 'numberOfAttendees': RSVPs.value.pubkeys.length};
+  } catch (e) {
+    console.log(e);
   }
-  RSVPs.value.pubkeys = RSVPs.value.pubkeys.filter((item, index, array) => array.indexOf(item) === index);
-  RSVPs.value = {...RSVPs.value, 'numberOfAttendees': RSVPs.value.pubkeys.length};
 }
 
 </script>
@@ -158,7 +171,7 @@ const getRSVPs = async (calendarEvent) => {
     <div v-if="fetchedCalendarEvent">
       <div class="text-center my-12">
         <h2 class="text-white text-6xl mb-4">{{ metadata.title }}</h2>
-        <p>
+        <p class="my-4">
           {{ metadata.summary }}
         </p>
         <p>
@@ -171,7 +184,7 @@ const getRSVPs = async (calendarEvent) => {
         <div class="mt-4 my-2" v-if="metadata.isAttending">
           <span class="text-green-400">You're attending this event</span>
           <br />
-          <a href="#" class="text-sm underline" @click="RSVPtoEvent(fetchedCalendarEvent, 'declined', $event)">Click here to unattend</a>
+          <button class="text-sm underline" @click="RSVPtoEvent(fetchedCalendarEvent, 'declined', $event)">Click here to unattend</button>
         </div>
         <div class="mt-4 my-2" v-else>
           <button @click="RSVPtoEvent(fetchedCalendarEvent, 'accepted', $event)" class="inline-flex items-center rounded-md btn-block bg-orange-500 hover:bg-orange-700 p-2">
@@ -183,8 +196,8 @@ const getRSVPs = async (calendarEvent) => {
           </button>
         </div>
         <div class="my-12">
-          <a href="https://bitkassa.nl/nostrdam" target="_blank">Please be aware you have to <span class="underline">buy a ticket</span> </a>
-</div>
+          <a href="https://bitkassa.nl/nostrdam" target="_blank" class="p-4 bg-white bg-opacity-10">Please be aware you have to <span class="underline text-orange-400">buy a ticket</span></a>
+        </div>
         <p class="text-sm italic" v-if="RSVPs">
           <span>{{ RSVPs.numberOfAttendees }}</span> other nostriches are going
         </p>
