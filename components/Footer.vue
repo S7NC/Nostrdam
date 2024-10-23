@@ -64,15 +64,18 @@ const currentDate = new Date();
         <div> 
         <div class="text-center">
 
-          <span
-            v-if="eventData"
-            class="mt-1.5 ml-4 text-2xl font-bold dark:text-white uppercase"
-            >{{ eventData.name }}</span
-          >
+          <img src="/logo-nostrdam.png" class="h-12 mx-auto">
+
 
           <div class="flex flex-row justify-center my-3">
             <SettingsTheme />
           </div>
+
+          <div class="flex flex-row justify-center my-3">
+            <SettingsSocials />
+          </div>
+
+
         </div>
 
       </div>

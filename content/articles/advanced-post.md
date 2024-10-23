@@ -1,5 +1,5 @@
 ---
-title: "Nostrdam Booth 24"
+title: "Nostrdam 8 October 2024 "
 layout: default
 description: "This is a more robust front matter blog post example setup"
 featured: true

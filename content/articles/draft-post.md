@@ -1,6 +1,6 @@
 ---
 _draft: true
-title: "Nostrdam Booth 24"
+title: "Nostrdam 8 October 2024 "
 layout: default
 description: "This is an example of a Draft Post that will not be shown in the feeds"
 featured: true

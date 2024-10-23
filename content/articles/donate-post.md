@@ -1,5 +1,5 @@
 ---
-title: "Nostrdam Booth 24"
+title: "Nostrdam 8 October 2024 "
 layout: default
 description: "This is a simple paywall post that currently only accepts Alby, it also does not set any global payment variables, you refresh, you lose access. Pretty brutal implementation also easily circumvented if you are a wizard."
 featured: true

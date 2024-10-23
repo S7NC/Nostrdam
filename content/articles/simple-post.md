@@ -1,5 +1,5 @@
 ---
-title: "Nostrdam Booth 24"
+title: "Nostrdam 8 October 2024 "
 layout: default
 description: "This is a simple front matter markdown post example without to much SEO compromise."
 featured: true

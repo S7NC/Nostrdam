@@ -1,14 +1,29 @@
 {
     "Headernavigation":{
         "basicmenu":[
-
+         {
+            "name":"Home",
+            "href":"/"
+         },
+         {
+            "name":"Schedule",
+            "href":"/schedule"
+         },
+         {
+            "name":"Recordings",
+            "href":"/video"
+         },
+         {
+            "name":"Connect",
+            "href":"/contact"
+         }
         ],
-        "MenuPopupName":"",
+        "MenuPopupName":"History",
         "MenuPopup":[
            {
-              "name":"Example Item",
-              "description":"Enable by entering a name in MenuPopupName",
-              "href":"/"
+              "name":"Website 2024",
+              "description":"",
+              "href":"https://connecttheworld.live/nostrdam/"
            }
         ]
      },

@@ -2,9 +2,6 @@
 
     <div class="container mx-auto p-4 max-w-7xl mt-12">
 
-      <h1 class="text-2xl text-center dark:text-white mb-6">
-        Our latest notes
-      </h1>
 
       <div v-if="isLoading" class="text-center my-10">
         <svg
@@ -52,11 +49,11 @@
           </svg>
         </button>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mx-4 overflow-hidden">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mx-4 overflow-hidden">
           <div
             v-for="(event, index) in displayedEvents"
             :key="index"
-            class="w-full p-4 bg-white rounded-lg shadow-2xl dark:bg-black dark:shadow-lg dark:shadow-gray-700"
+            class="w-full p-4 bg-white rounded-lg  dark:bg-black dark:shadow-lg dark:shadow-gray-700"
           >
             <p>
               <CalendarDaysIcon
@@ -178,7 +175,7 @@ const isNotReply = (event) => {
 const eventsPerPage = computed(() => {
   if (window.innerWidth < 640) return 1;
   if (window.innerWidth < 1024) return 2;
-  return 3;
+  return 4;
 });
 
 const displayedEvents = computed(() => {
@@ -207,7 +204,7 @@ onMounted(async () => {
   const fetchedEvents = await ndk.fetchEvents(filter);
   const filteredEvents = Array.from(fetchedEvents)
     .filter(isNotReply)
-    .slice(0, 10);
+    .slice(0, 12);
   events.value = filteredEvents;
   isLoading.value = false; // Set loading to false after events are fetched
 });

@@ -4,8 +4,8 @@
   "maintenancemode": false,
   "nostradmin":"npub1h5ewqujs336m0kdez46l03jttnaqp3yrvf7evertw0ec52q3qulq4kcdg7",
   "relays":["wss://relay.damus.io", "wss://relay.nostr.band", "wss://nos.lol", "wss://relay.nostr.band"],
-  "name":"Nostrdam '24",
-  "tagline":"Bitcoin Amsterdam '24 Nostr booth",
+  "name":"Nostrdam ",
+  "tagline":"Bitcoin Amsterdam",
   "textlogo":"Nostrdam",
   "logo":false,
   "logoimage":"NG_Logo_CypherSpace.gif",
@@ -28,7 +28,7 @@
   },
   "testnet":"false",
   "btcadress":"",
-  "lightningaddress":"cypher@npub.cash",
+  "lightningaddress":"zap@nostrdam.com",
   "orderwebhook":"",
   "nostr":true,
   "footerlanguage":true,
@@ -38,11 +38,13 @@
      "facebook":"",
      "instagram":"",
      "twitter":"",
-     "github":"https://github.com/cypher-space",
+     "github":"https://github.com/s7nc/nostrdam",
      "discord":"",
      "dribble":"",
      "linkedin":"",
-     "telegram":"",
-     "nostr":""
+     "email":"info@nostrdam.com",
+     "youtube":"https://www.youtube.com/@ConnectTheWorld", 
+     "telegram":"https://t.me/nostrdam",
+     "nostr":"nostr:npub1h5ewqujs336m0kdez46l03jttnaqp3yrvf7evertw0ec52q3qulq4kcdg7"
   }
 }
