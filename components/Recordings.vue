@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-7xl mx-auto p-6 text-center mt-10">
-    <h1 class="text-3xl font-bold mb-8">Event Video Archive</h1>
+    <h1 class="text-3xl font-bold mb-8">Video Archive 2024</h1>
 
     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
       <div v-for="video in videos" :key="video.id" class="text-left">
