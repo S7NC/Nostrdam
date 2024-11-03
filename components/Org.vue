@@ -96,7 +96,7 @@ onMounted(async () => {
     const filter = { kinds: [0], authors: [skHex] };
 
     const event = await ndk.fetchEvent(filter);
-
+    console.log(event)
     if (event && event.content) {
       try {
         profile.eventData = JSON.parse(event.content);
