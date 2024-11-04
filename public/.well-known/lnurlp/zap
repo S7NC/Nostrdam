@@ -2,8 +2,8 @@
     "status": "OK",
     "tag": "payRequest",
     "commentAllowed": 255,
-    "callback": "https://getalby.com/lnurlp/connecttheworld/callback",
-    "metadata": "[[\"text/identifier\", \"connecttheworld@getalby.com\"], [\"text/plain\", \"Sats for Nostrdam\"]]",
+    "callback": "https://getalby.com/lnurlp/zapnostrdam/callback",
+    "metadata": "[[\"text/identifier\", \"zapnostrdam@getalby.com\"], [\"text/plain\", \"Sats for Nostrdam\"]]",
     "minSendable": 1000,
     "maxSendable": 11000000000,
     "payerData": {
