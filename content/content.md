@@ -21,3 +21,5 @@ head:
 
 ---
 :Recordings
+
+:Rss
